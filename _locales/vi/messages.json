@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup: xuất cuộc trò chuyện Microsoft Teams ra PDF",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "Sao lưu và xuất trò chuyện, kênh Microsoft Teams ra PDF, HTML hoặc TXT. Trình xem cục bộ riêng tư có tìm kiếm. Không tải lên gì.",
+    "description": "Store summary, max 132 characters."
+  }
+}

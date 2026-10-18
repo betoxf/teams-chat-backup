@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Teams Chat Backup - Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="viewer.css" />
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar - Chat List -->
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="sidebar__logo">
+                    <img src="icons/icon.png" alt="Teams Backup" class="sidebar__logo-img" />
+                    <span class="sidebar__title">Chat Backups</span>
+                </div>
+                <p class="sidebar__privacy">Saved backups stay in this browser. Downloaded content is available offline.</p>
+            </div>
+            <div class="sidebar__search">
+                <input type="text" id="searchChats" placeholder="Search chats..." class="search-input" />
+            </div>
+            <div class="sidebar__export">
+                <div class="sidebar__export-buttons">
+                    <button id="exportAllBtn" class="export-all-btn" title="Export all backups as ZIP">
+                        <svg class="export-all-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span id="exportAllBtnLabel">Export All</span>
+                    </button>
+                    <button id="importBtn" class="import-btn" title="Import backups from file">
+                        <svg class="import-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span id="importBtnLabel">Import</span>
+                    </button>
+                </div>
+                <input type="file" id="importFileInput" accept=".tcb,.json,.zip" style="display: none;" />
+                <p id="proOnlyActionsNote" class="sidebar__pro-note" style="display: none;">Bulk import/export all is Pro. Select an unlocked backup to download PDF, HTML, or TXT.</p>
+                <p id="freeTierLimitNote" class="sidebar__limit-note" style="display: none;"></p>
+                <p class="sidebar__backup-warning">Export your chats frequently. If you uninstall Chrome or this extension, local backups will be lost.</p>
+            </div>
+            <div id="chatList" class="chat-list">
+                <!-- Chat items will be loaded here -->
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state__icon-circle"></div>
+                <p>No backups yet</p>
+                <p class="empty-state__subtitle">Back up a Teams chat to see it here</p>
+            </div>
+
+            <!-- Trash Section -->
+            <div class="sidebar__trash-section">
+                <button id="trashToggleBtn" class="trash-toggle-btn">
+                    <svg class="trash-toggle-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    <span>Recycle Bin</span>
+                    <span id="trashCount" class="trash-toggle-btn__count" style="display: none;">0</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Welcome/Empty State -->
+            <div id="welcomeState" class="welcome-state">
+                <div class="welcome-state__icon-circle"></div>
+                <h2>Welcome to Teams Chat Viewer</h2>
+                <p>Select a backup from the sidebar to view your messages</p>
+            </div>
+
+            <!-- Chat View -->
+            <div id="chatView" class="chat-view" style="display: none;">
+                <!-- Continue Backup Notice (for incomplete backups) -->
+                <div id="continueBackupNotice" class="continue-backup-notice" style="display: none;">
+                    <div class="continue-backup-notice__content">
+                        <div class="continue-backup-notice__text">
+                            <strong>This backup is incomplete</strong>
+                            <span>Open Teams and run this chat again to continue from saved checkpoints.</span>
+                        </div>
+                        <button id="continueBackupBtn" class="continue-backup-notice__btn">Open Teams</button>
+                    </div>
+                </div>
+
+                <!-- Chat Header -->
+                <header class="chat-header">
+                    <div class="chat-header__info">
+                        <div class="chat-header__avatar" id="chatAvatar"></div>
+                        <div class="chat-header__details">
+                            <div class="chat-header__name-row">
+                                <h1 class="chat-header__name" id="chatName">Chat Name</h1>
+                                <span class="chat-kind-badge" id="chatTypeBadge">Chat</span>
+                            </div>
+                            <span class="chat-header__meta" id="chatMeta">0 messages</span>
+                        </div>
+                    </div>
+                    <div class="chat-header__actions">
+                        <div class="download-dropdown" id="downloadDropdown">
+                            <button id="downloadBtn" class="header-action" title="Download backup">
+                                <svg class="header-action__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <span class="header-action__text">Download</span>
+                                <svg class="download-dropdown__caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div id="downloadMenu" class="download-dropdown__menu" style="display: none;">
+                                <button id="downloadPdfOption" class="download-dropdown__item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                    <span>PDF</span>
+                                </button>
+                                <button id="downloadHtmlOption" class="download-dropdown__item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="16 18 22 12 16 6"></polyline>
+                                        <polyline points="8 6 2 12 8 18"></polyline>
+                                    </svg>
+                                    <span>HTML</span>
+                                </button>
+                                <button id="downloadTxtOption" class="download-dropdown__item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <line x1="10" y1="9" x2="8" y2="9"></line>
+                                    </svg>
+                                    <span>TXT</span>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="deleteChatBtn" class="header-action header-action--danger" title="Delete Backup">
+                            <svg class="header-action__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            <span class="header-action__text">Delete</span>
+                        </button>
+                        <button id="viewerSettingsBtn" class="header-action" title="Viewer Settings">
+                            <svg class="header-action__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            <span class="header-action__text">Settings</span>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Search Toolbar -->
+                <div id="searchToolbar" class="search-toolbar">
+                    <div class="search-toolbar__left">
+                        <div class="search-toolbar__input-wrapper">
+                            <svg class="search-toolbar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                            <input type="text" id="messageSearch" placeholder="Search messages..." class="search-toolbar__input" />
+                            <button id="clearSearch" class="search-toolbar__clear" title="Clear search" style="display: none;">×</button>
+                        </div>
+                        <div id="searchResults" class="search-toolbar__results" style="display: none;">
+                            <span id="searchResultCount">0 results</span>
+                            <div class="search-toolbar__nav">
+                                <button id="prevResult" class="search-toolbar__nav-btn" title="Previous result">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="18 15 12 9 6 15"></polyline>
+                                    </svg>
+                                </button>
+                                <button id="nextResult" class="search-toolbar__nav-btn" title="Next result">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-toolbar__right">
+                        <button id="starredFilterBtn" class="search-toolbar__starred-btn" title="Show starred messages">
+                            <svg class="search-toolbar__starred-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            <span>Starred</span>
+                            <span id="starredCount" class="search-toolbar__starred-count" style="display: none;">0</span>
+                        </button>
+                        <div class="search-toolbar__date-filter">
+                            <svg class="search-toolbar__date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <select id="dateFilter" class="search-toolbar__date-select">
+                                <option value="">Jump to date...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="chat-tabs">
+                    <button class="chat-tab chat-tab--active" data-tab="messages">
+                        <span id="messagesTabLabel">Messages</span>
+                    </button>
+                    <button class="chat-tab" data-tab="attachments">
+                        <span id="attachmentsTabLabel">Attachments</span>
+                        <span id="attachmentsCount" class="chat-tab__count" style="display: none;">0</span>
+                    </button>
+                </div>
+
+                <!-- Messages Container -->
+                <div id="messagesContainer" class="messages-container">
+                    <!-- Messages will be loaded here -->
+                </div>
+
+                <!-- Attachments Container -->
+                <div id="attachmentsContainer" class="attachments-container" style="display: none;">
+                    <div id="attachmentsGrid" class="attachments-grid">
+                        <!-- Attachments will be loaded here -->
+                    </div>
+                    <div id="noAttachments" class="no-attachments" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                        </svg>
+                        <p>No attachments in this chat</p>
+                        <span style="font-size: 12px; color: var(--teams-text-light);">Files and images shared in the conversation will appear here</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Delete Confirmation Modal (moves to recycle bin) -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <h3 id="deleteModalTitle">Move to Recycle Bin?</h3>
+            <p id="deleteModalMessage">This backup will be moved to the recycle bin and automatically deleted after 60 days. You can restore it anytime before then.</p>
+            <div class="modal__actions">
+                <button id="cancelDeleteBtn" class="modal__btn modal__btn--secondary">Cancel</button>
+                <button id="confirmDeleteBtn" class="modal__btn modal__btn--danger">Move to Bin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrade Modal (plan limits for free users) -->
+    <div id="upgradeModal" class="modal" style="display: none;">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <h3 id="upgradeModalTitle">Upgrade to Pro</h3>
+            <p id="upgradeModalMessage"></p>
+            <div class="modal__actions">
+                <button id="cancelUpgradeBtn" class="modal__btn modal__btn--secondary">Not now</button>
+                <button id="confirmUpgradeBtn" class="modal__btn modal__btn--primary">Upgrade to Pro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Message Modal -->
+    <div id="editMessageModal" class="modal" style="display: none;">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content modal__content--edit">
+            <h3>Edit Message</h3>
+            <div class="edit-modal__original">
+                <span class="edit-modal__label">Original:</span>
+                <p id="editOriginalContent" class="edit-modal__original-text"></p>
+            </div>
+            <div class="edit-modal__input-wrapper">
+                <textarea id="editMessageInput" class="edit-modal__textarea" placeholder="Enter new message..."></textarea>
+            </div>
+            <div class="modal__actions">
+                <button id="cancelEditBtn" class="modal__btn modal__btn--secondary">Cancel</button>
+                <button id="confirmEditBtn" class="modal__btn modal__btn--primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Message Confirmation Modal -->
+    <div id="deleteMessageModal" class="modal" style="display: none;">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <h3>Delete Message?</h3>
+            <p>This message will be marked as deleted. You can still view it on hover unless hidden in settings.</p>
+            <div class="delete-message-preview" id="deleteMessagePreview"></div>
+            <div class="modal__actions">
+                <button id="cancelDeleteMsgBtn" class="modal__btn modal__btn--secondary">Cancel</button>
+                <button id="confirmDeleteMsgBtn" class="modal__btn modal__btn--danger">Delete Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Viewer Settings Panel -->
+    <div id="viewerSettings" class="viewer-settings" style="display: none;">
+        <div class="viewer-settings__header">
+            <h3>Viewer Settings</h3>
+            <button id="closeSettingsBtn" class="viewer-settings__close">&times;</button>
+        </div>
+        <div class="viewer-settings__content">
+            <label class="viewer-settings__option">
+                <input type="checkbox" id="hideDeletedMessages" />
+                <span class="viewer-settings__checkbox"></span>
+                <div class="viewer-settings__option-text">
+                    <span class="viewer-settings__option-title">Hide deleted messages completely</span>
+                    <span class="viewer-settings__option-desc">When enabled, deleted messages won't show even on hover</span>
+                </div>
+            </label>
+            <label class="viewer-settings__option">
+                <input type="checkbox" id="showEditHistory" checked />
+                <span class="viewer-settings__checkbox"></span>
+                <div class="viewer-settings__option-text">
+                    <span class="viewer-settings__option-title">Show edit history on hover</span>
+                    <span class="viewer-settings__option-desc">Display previous versions when hovering edited messages</span>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- Pro Upgrade Banner (for free users) -->
+    <div id="proUpgradeBanner" class="pro-upgrade-banner" style="display: none;">
+        <div class="pro-upgrade-banner__content">
+            <div class="pro-upgrade-banner__icon">◆</div>
+            <div class="pro-upgrade-banner__text">
+                <strong>Upgrade to Pro</strong>
+                <span>Back up every chat, keep backups up to date, and download without the FREE watermark</span>
+            </div>
+            <button id="upgradeBannerBtn" class="pro-upgrade-banner__btn">Upgrade Now</button>
+            <button id="closeBannerBtn" class="pro-upgrade-banner__close">×</button>
+        </div>
+    </div>
+
+    <!-- Trash/Recycle Bin Panel -->
+    <div id="trashPanel" class="trash-panel" style="display: none;">
+        <div class="trash-panel__backdrop"></div>
+        <div class="trash-panel__content">
+            <div class="trash-panel__header">
+                <h3>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Recycle Bin
+                </h3>
+                <button id="closeTrashBtn" class="trash-panel__close">&times;</button>
+            </div>
+            <p class="trash-panel__info">Deleted chats are kept for 60 days before being permanently removed.</p>
+            <div id="trashList" class="trash-panel__list">
+                <!-- Trashed chats will be loaded here -->
+            </div>
+            <div id="trashEmpty" class="trash-panel__empty" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <p>Recycle bin is empty</p>
+                <span>Deleted chats will appear here</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trash Restore/Delete Confirmation Modal -->
+    <div id="trashActionModal" class="modal" style="display: none;">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <h3 id="trashActionTitle">Restore Chat?</h3>
+            <p id="trashActionMessage">This chat will be restored to your chat list.</p>
+            <div class="modal__actions">
+                <button id="cancelTrashActionBtn" class="modal__btn modal__btn--secondary">Cancel</button>
+                <button id="confirmTrashActionBtn" class="modal__btn modal__btn--primary">Restore</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="libraries/jszip.min.js"></script>
+    <script src="libraries/jspdf.min.js"></script>
+    <script src="db.js"></script>
+    <script src="license.js"></script>
+    <script src="viewer.js"></script>
+</body>
+</html>

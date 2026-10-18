@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" class="brand">
+<head>
+    <meta charset="UTF-8" />
+    <title>Teams Chat Backup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="popup-brand.css" />
+</head>
+<body>
+    <!-- App bar -->
+    <header class="app-bar">
+        <img class="app-bar__logo" src="icons/icon48.png" alt="" width="32" height="32">
+        <div class="app-bar__title">
+            <span class="app-bar__name">Teams Chat Backup</span>
+            <span class="app-bar__version" id="versionBadge"></span>
+        </div>
+        <div class="app-bar__actions">
+            <a href="https://bullfighterstudio.com/teams-backup#feedback" target="_blank" rel="noopener" class="app-bar__btn" title="Report a bug" aria-label="Report a bug">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 2l1.88 1.88M14.12 3.88L16 2M9 7.13v-1a3.003 3.003 0 116 0v1"/>
+                    <path d="M12 20c-3.3 0-6-2.7-6-6v-3a6 6 0 0112 0v3c0 3.3-2.7 6-6 6z"/>
+                    <path d="M12 20v2M6 13H4M20 13h-2M6.4 6.5L4.4 4.5M17.6 6.5l2-2"/>
+                </svg>
+            </a>
+            <a href="https://chromewebstore.google.com/detail/teams-chat-backup/ijpmkkmgpdjdjpgmochlhadmmdmmncjm/reviews" target="_blank" rel="noopener" class="app-bar__btn" title="Rate us" aria-label="Rate us">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </a>
+            <button id="settingsBtn" class="app-bar__btn" title="Settings" aria-label="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                <span id="settingsNewDot" class="settings-new-dot" style="display: none;"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel" style="display: none;">
+        <div class="settings-panel__header">
+            <h3>Settings</h3>
+            <button id="closeSettingsBtn" class="settings-panel__close">&times;</button>
+        </div>
+
+        <div class="settings-panel__content">
+            <div id="viewerOnlyModeNotice" class="settings-mode-note" style="display: none;">
+                Popup backups are currently saved to the Viewer only. Turbo Mode stays on and Capture Speed is hidden until popup PDF capture is re-enabled.
+            </div>
+
+            <!-- Turbo Mode Toggle -->
+            <div class="settings-section" id="turboModeSection">
+                <label class="checkbox-label settings-checkbox turbo-checkbox">
+                    <input type="checkbox" id="turboModeCheckbox">
+                    <span>Turbo Mode</span>
+                    <span class="turbo-badge">FAST</span>
+                </label>
+                <p class="settings-hint">Skips screenshot capture - only saves chat text and images to the Viewer. No PDF is generated, but backups are 10x faster!</p>
+            </div>
+
+            <!-- Long Chat Mode Toggle -->
+            <div class="settings-section" id="longChatSection">
+                <label class="checkbox-label settings-checkbox long-chat-checkbox">
+                    <input type="checkbox" id="longChatModeCheckbox">
+                    <span>Long Chat Mode</span>
+                    <span class="long-chat-badge">DEEP</span>
+                </label>
+                <p class="settings-hint">For very long chats (months or years of history). Tries much harder to load older messages and may take significantly longer. Progress is saved to the Viewer as checkpoints.</p>
+            </div>
+
+            <!-- File Attachments Setting -->
+            <div class="settings-section" id="fileAttachmentsSection">
+                <label class="checkbox-label settings-checkbox file-attachments-checkbox">
+                    <input type="checkbox" id="fileAttachmentsCheckbox">
+                    <span>Include File Attachments</span>
+                    <span class="file-badge">FILES</span>
+                </label>
+                <p class="settings-hint">Download shared files (PDF, Word, Excel, etc.) and include them in backups.</p>
+
+                <div class="file-settings-details" id="fileSettingsDetails" style="display: none;">
+                    <label class="settings-label">
+                        <span class="settings-label__text">Max File Size</span>
+                        <span class="settings-label__hint" id="maxFileSizeHint">Up to 5 MB per file</span>
+                    </label>
+                    <div class="settings-slider">
+                        <span class="settings-slider__label">1 MB</span>
+                        <input type="range" id="maxFileSizeSlider" min="1" max="50" value="5" step="1">
+                        <span class="settings-slider__label">50 MB</span>
+                    </div>
+                    <p class="settings-hint file-warning">Larger files increase backup time and storage usage.</p>
+                </div>
+            </div>
+
+            <!-- Capture Speed (disabled in Turbo Mode) -->
+            <div class="settings-section" id="captureSpeedSection">
+                <label class="settings-label">
+                    <span class="settings-label__text">Capture Speed</span>
+                    <span class="settings-label__hint">Slower = safer for slow PCs/internet</span>
+                </label>
+                <div class="settings-slider">
+                    <span class="settings-slider__label">Slower</span>
+                    <input type="range" id="captureSpeedSlider" min="1" max="5" value="3" step="1">
+                    <span class="settings-slider__label">Faster</span>
+                </div>
+                <div class="settings-slider__value" id="captureSpeedValue">Normal</div>
+                <p class="settings-hint turbo-override-hint" id="turboOverrideHint" style="display: none;">Turbo Mode overrides this setting</p>
+            </div>
+
+            <!-- Cover Page Toggle (Pro only) -->
+            <div class="settings-section" id="settingsCoverToggle" style="display: none;">
+                <label class="checkbox-label settings-checkbox">
+                    <input type="checkbox" id="settingsIncludeCover" checked>
+                    <span>Include cover & footer pages</span>
+                </label>
+                <p class="settings-hint">Pro feature: Add branded pages to PDF</p>
+            </div>
+
+            <!-- License (shown for Pro users; free users see it in the upgrade box) -->
+            <div class="settings-section" id="settingsLicenseSection" style="display: none;">
+                <label class="settings-label">
+                    <span class="settings-label__text">License ID</span>
+                    <span class="settings-label__hint">Paste it into Restore Purchase on another browser</span>
+                </label>
+                <div class="app-user-id-card__row">
+                    <code id="settingsLicenseIdValue" class="app-user-id-card__value">Loading...</code>
+                    <button id="settingsCopyLicenseButton" type="button" class="app-user-id-card__copy">Copy</button>
+                </div>
+                <a id="settingsSupportLink" class="settings-support-link" href="mailto:support@teamschatbackup.com" target="_blank" rel="noopener">Email support about my purchase</a>
+            </div>
+
+            <!-- Divider -->
+            <div class="settings-divider"></div>
+
+            <!-- Feedback Links -->
+            <div class="settings-section settings-feedback">
+                <a href="https://bullfighterstudio.com/teams-backup#feedback" target="_blank" class="settings-feedback__link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 2l1.88 1.88M14.12 3.88L16 2M9 7.13v-1a3.003 3.003 0 116 0v1"/>
+                        <path d="M12 20c-3.3 0-6-2.7-6-6v-3a6 6 0 0112 0v3c0 3.3-2.7 6-6 6z"/>
+                        <path d="M12 20v2M6 13H4M20 13h-2"/>
+                    </svg>
+                    <span>Report Bug</span>
+                </a>
+                <a href="https://bullfighterstudio.com/teams-backup#feedback" target="_blank" class="settings-feedback__link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    <span>Request Feature</span>
+                </a>
+                <a href="https://chromewebstore.google.com/detail/teams-chat-backup/ijpmkkmgpdjdjpgmochlhadmmdmmncjm/reviews" target="_blank" class="settings-feedback__link">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span>Rate Us</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div id="status" class="status-banner"></div>
+            <div id="freeBadge" class="free-badge" style="display: none;">
+                <div class="free-badge__icon">◇</div>
+                <span class="free-badge__text">Free Plan</span>
+            </div>
+            <div id="proBadge" class="pro-badge" style="display: none;">
+                <div class="pro-badge__icon">◆</div>
+                <span class="pro-badge__text">Pro Access</span>
+            </div>
+            <h1>Teams Chat Backup</h1>
+        </div>
+
+        <!-- Pro Option: Cover Toggle (moved to settings) -->
+        <input type="hidden" id="includeCover" checked>
+        <div id="coverToggleContainer" style="display: none;"></div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button id="backupButton" class="primary-button no-selection">
+                <span class="backup-button__text">Backup Chats &amp; Channels</span>
+                <span class="backup-button__toggle">▼</span>
+            </button>
+
+            <!-- Chat Selection Dropdown (shown after clicking backup button) -->
+            <div class="chat-selection" id="chatSelectionContainer" style="display: none;">
+                <div class="chat-selection__list" id="chatList">
+                    <!-- Chat items will be populated dynamically -->
+                </div>
+                <div id="freeUserNotice" class="free-user-notice" style="display: none;">
+                    Free plan: 1 chat backup.
+                </div>
+                <button id="startBackupBtn" class="start-backup-button" disabled>Start Backup</button>
+            </div>
+
+            <button id="stopButton" class="stop-button">Stop Scrolling</button>
+            <button id="viewBackedFilesButton" class="backed-files-button">
+                <span class="backed-files-text">View Backed Files</span>
+                <span id="backedFilesCount" class="backed-files-count"></span>
+            </button>
+        </div>
+
+        <!-- Status & Progress -->
+        <div id="statusContainer">
+            <div id="loadingMessage"></div>
+            <div id="progressContainer">
+                <div id="progressBar"></div>
+            </div>
+            <div id="backupHint" class="backup-hint" style="display: none;">Please stay on this screen during backup</div>
+        </div>
+        <!-- Rating prompt (shown once after a clean backup) -->
+        <div id="ratingPrompt" class="rating-prompt" hidden>
+            <div class="rating-prompt__stars" aria-hidden="true">★★★★★</div>
+            <p class="rating-prompt__title">Backup saved. Enjoying Teams Chat Backup?</p>
+            <p class="rating-prompt__text">A quick rating helps other Teams users find it.</p>
+            <div class="rating-prompt__actions">
+                <a id="ratingPromptRate" class="rating-prompt__rate" href="https://chromewebstore.google.com/detail/teams-chat-backup/ijpmkkmgpdjdjpgmochlhadmmdmmncjm/reviews" target="_blank" rel="noopener">Rate on Chrome Web Store</a>
+                <button id="ratingPromptLater" type="button" class="rating-prompt__later">Not now</button>
+            </div>
+            <a class="rating-prompt__issue" href="https://bullfighterstudio.com/teams-backup#feedback" target="_blank" rel="noopener">Something not right? Tell us first</a>
+        </div>
+        <div id="downloadContainer">
+            <button id="downloadButton" class="download-button">Download Backup (PDF + Text)</button>
+            <button id="viewBackupButton" class="view-button">View in Chat Viewer</button>
+        </div>
+
+        <!-- Upgrade Section -->
+        <div id="upgradeSection" class="upgrade-section" style="display: none;">
+            <h2>Upgrade to Pro</h2>
+            <div class="pricing-info">
+                <span class="price">$15</span>
+                <span class="price-detail">One-time payment</span>
+            </div>
+            <p class="free-plan-note">Free plan: 1 chat backup, downloads marked "FREE VERSION".</p>
+            <ul class="feature-list">
+                <li>Back up every chat and channel</li>
+                <li>Refresh saved backups with new messages</li>
+                <li>Back up several chats at once</li>
+                <li>Downloads without the FREE watermark</li>
+                <li>Export and import all backups</li>
+                <li>File attachments</li>
+                <li>Lifetime access</li>
+            </ul>
+            <p class="chrome-profile-note">Secure checkout by RevenueCat. After purchase verification, Pro stays unlocked offline on this browser profile. No recurring license checks. Your chats are never sent.</p>
+            <button id="purchaseButton" class="purchase-button">Unlock Full Version</button>
+            <button id="restoreButton" class="restore-button">Restore Purchase</button>
+            <p class="chrome-profile-note">Chrome sync can bring your License ID to a new device. Choose Restore Purchase to activate Pro once on that device, or paste the License ID from the original device. Backups and chat names stay local.</p>
+            <div class="app-user-id-card">
+                <div class="app-user-id-card__label">License ID</div>
+                <div class="app-user-id-card__row">
+                    <code id="appUserIdValue" class="app-user-id-card__value">Loading...</code>
+                    <button id="copyUserIdButton" type="button" class="app-user-id-card__copy">Copy</button>
+                </div>
+            </div>
+            <p id="purchasePollingMessage" class="polling-message" style="display: none;">⏳ Waiting for payment confirmation...</p>
+        </div>
+
+        <!-- Privacy Notice -->
+        <div class="privacy-notice">
+            <p>Chat messages, screenshots and downloaded files stay in this browser or your downloads. We do not upload your backups. Teams access starts when you click the extension.</p>
+            <p class="privacy-notice__source">Our <a href="https://github.com/betoxf/teams-chat-backup" target="_blank" rel="noopener">source code is public</a>, so anyone can check what the extension does with your data.</p>
+        </div>
+
+        <!-- Email Modal for Restore -->
+        <div id="emailModal" class="email-modal" style="display: none;">
+            <div class="email-modal__backdrop"></div>
+            <div class="email-modal__content">
+                <h3 class="email-modal__title">Restore Purchase</h3>
+                <p class="email-modal__description">Paste the License ID shown on the original device.</p>
+                <input type="text" id="emailInput" class="email-modal__input" placeholder="user_abc123" autocomplete="off">
+                <p id="emailError" class="email-modal__error" style="display: none;"></p>
+                <p class="email-modal__help">Lost your License ID? <a id="restoreSupportLink" href="mailto:support@teamschatbackup.com" target="_blank" rel="noopener">Email support</a> with your purchase receipt.</p>
+                <div class="email-modal__buttons">
+                    <button id="emailCancelBtn" class="email-modal__btn email-modal__btn--cancel">Cancel</button>
+                    <button id="emailSubmitBtn" class="email-modal__btn email-modal__btn--submit">Restore</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup In Progress Confirmation Modal -->
+        <div id="backupConfirmModal" class="confirm-modal" style="display: none;">
+            <div class="confirm-modal__backdrop"></div>
+            <div class="confirm-modal__content">
+                <div class="confirm-modal__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <h3 class="confirm-modal__title">Backup In Progress</h3>
+                <p class="confirm-modal__description">A backup is currently running. You can open the Viewer to inspect saved checkpoints, but keep the Teams tab open so the backup can continue.</p>
+                <div class="confirm-modal__buttons">
+                    <button id="confirmContinueBtn" class="confirm-modal__btn confirm-modal__btn--continue">Keep Watching</button>
+                    <button id="confirmCancelBtn" class="confirm-modal__btn confirm-modal__btn--cancel">Open Viewer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Footer (moved to settings) -->
+    </div>
+
+    <!-- Database and Main JavaScript -->
+    <script src="db.js"></script>
+    <script src="license.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup: Microsoft Teams sohbetlerini PDF'e aktar",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "Microsoft Teams sohbet ve kanallarını yedekleyin; PDF, HTML veya TXT olarak dışa aktarın. Yerel görüntüleyici. Yükleme yok.",
+    "description": "Store summary, max 132 characters."
+  }
+}

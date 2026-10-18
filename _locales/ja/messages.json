@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup: Microsoft Teams のチャットを PDF に書き出し",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "Microsoft Teams のチャットとチャネルをバックアップし、PDF・HTML・TXT に書き出し。検索できるローカルビューア。データは送信されません。",
+    "description": "Store summary, max 132 characters."
+  }
+}

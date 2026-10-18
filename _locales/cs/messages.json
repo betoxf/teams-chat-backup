@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup: export chatů z Microsoft Teams do PDF",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "Zálohujte a exportujte chaty a kanály Microsoft Teams do PDF, HTML nebo TXT. Soukromý místní prohlížeč. Nic se nenahrává.",
+    "description": "Store summary, max 132 characters."
+  }
+}

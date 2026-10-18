@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup: Microsoft Teams Chats als PDF exportieren",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "Sichern und exportieren Sie Microsoft Teams Chats und Kanäle als PDF, HTML oder TXT. Privater lokaler Viewer. Kein Upload.",
+    "description": "Store summary, max 132 characters."
+  }
+}

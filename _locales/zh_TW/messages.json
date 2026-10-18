@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup：將 Microsoft Teams 聊天匯出為 PDF",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "備份 Microsoft Teams 聊天與頻道，並匯出為 PDF、HTML 或 TXT。可搜尋的本機私密檢視器，資料不會上傳。",
+    "description": "Store summary, max 132 characters."
+  }
+}

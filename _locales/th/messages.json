@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Teams Chat Backup: ส่งออกแชท Microsoft Teams เป็น PDF",
+    "description": "Extension name shown in the Chrome Web Store."
+  },
+  "extShortName": {
+    "message": "Teams Chat Backup",
+    "description": "Short name for the toolbar."
+  },
+  "extDescription": {
+    "message": "สำรองและส่งออกแชทและแชนเนล Microsoft Teams เป็น PDF, HTML หรือ TXT ดูแบบออฟไลน์พร้อมค้นหา ไม่มีการอัปโหลดข้อมูล",
+    "description": "Store summary, max 132 characters."
+  }
+}

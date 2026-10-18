@@ -1,0 +1,253 @@
+/* Brand layer for the popup: black + popup blue, same look as the store listing and teamschatbackup.com.
+   Loaded after styles.css. Selectors start with html.brand body so they win over both the Free
+   and the Pro (body.pro-theme) rules without !important. */
+
+@font-face { font-family: "Poppins"; font-weight: 700; font-display: swap; src: url(fonts/poppins-700.woff2) format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 800; font-display: swap; src: url(fonts/poppins-800.woff2) format("woff2"); }
+
+html.brand {
+  --bg: #08080a;
+  --card: #131317;
+  --card-2: #18181d;
+  --line: rgba(255, 255, 255, .08);
+  --line-2: rgba(255, 255, 255, .14);
+  --text: #f4f4f6;
+  --muted: #a1a1aa;
+  --dim: #8b8b94;
+  --blue: #1c8fff;
+  --blue-2: #4fb3ff;
+  --blue-text: #6cc0ff;
+  --danger: #ff5c5c;
+  --warn-bg: rgba(255, 176, 32, .1);
+  --warn-line: rgba(255, 176, 32, .35);
+  --warn-text: #ffc861;
+  --display: "Poppins", -apple-system, "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+html.brand body,
+html.brand body.pro-theme {
+  background: radial-gradient(420px 260px at 85% -40px, rgba(28, 143, 255, .16), transparent 70%), var(--bg);
+  color: var(--text);
+  min-height: 560px;
+}
+
+/* App bar */
+html.brand body .app-bar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  background: rgba(8, 8, 10, .82);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+html.brand body .app-bar__logo { width: 32px; height: 32px; border-radius: 8px; flex: none; }
+html.brand body .app-bar__title { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+html.brand body .app-bar__name { font: 700 13px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+html.brand body .app-bar__version { font-size: 11px; color: var(--dim); }
+html.brand body .app-bar__actions { margin-left: auto; display: flex; gap: 6px; }
+html.brand body .app-bar__btn {
+  position: relative; width: 32px; height: 32px; display: grid; place-items: center;
+  border-radius: 9px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04);
+  color: var(--muted); cursor: pointer; padding: 0; transition: background .15s, color .15s;
+}
+html.brand body .app-bar__btn:hover { background: rgba(255, 255, 255, .09); color: var(--text); }
+html.brand body .app-bar__btn svg { width: 16px; height: 16px; }
+html.brand body .settings-new-dot { position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); border: 2px solid var(--bg); }
+
+/* Card + header */
+html.brand body .container,
+html.brand body.pro-theme .container {
+  background: transparent; border: 0; box-shadow: none; backdrop-filter: none;
+  margin: 0; padding: 18px 16px 24px; min-height: 0; border-radius: 0;
+}
+html.brand body .header { text-align: left; margin-bottom: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+html.brand body .header h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html.brand body .free-badge,
+html.brand body .pro-badge {
+  margin: 0; padding: 6px 11px; gap: 8px; border-radius: 999px; box-shadow: none;
+  font: 700 11px/1 var(--display); letter-spacing: .12em; text-transform: uppercase;
+}
+html.brand body .free-badge { background: rgba(255, 255, 255, .06); border: 1px solid var(--line-2); color: var(--text); }
+html.brand body .pro-badge { background: linear-gradient(135deg, var(--blue), var(--blue-2)); color: #fff; border: 0; }
+html.brand body .free-badge__icon,
+html.brand body .pro-badge__icon { animation: none; font-size: 11px; }
+
+html.brand body #status,
+html.brand body .status-banner { width: 100%; text-align: left; font-size: 13px; border-radius: 10px; }
+html.brand body .status-banner:not(:empty) { background: var(--card); border: 1px solid var(--line); padding: 10px 12px; }
+
+/* Buttons */
+html.brand body .action-buttons { display: flex; flex-direction: column; gap: 10px; }
+html.brand body .action-buttons button,
+html.brand body.pro-theme .action-buttons button { margin: 0; }
+html.brand body .primary-button,
+html.brand body.pro-theme .primary-button,
+html.brand body .primary-button.no-selection,
+html.brand body .primary-button.has-selection,
+html.brand body .start-backup-button {
+  width: 100%; height: 46px; border-radius: 12px; border: 0;
+  background: linear-gradient(135deg, var(--blue), var(--blue-2)); color: #fff;
+  font: 600 14.5px/1 -apple-system, "Segoe UI", system-ui, sans-serif; letter-spacing: 0;
+  box-shadow: 0 8px 22px rgba(28, 143, 255, .3), inset 0 1px 0 rgba(255, 255, 255, .22);
+  display: flex; align-items: center; justify-content: center; gap: 10px; text-transform: none;
+}
+html.brand body .primary-button:hover,
+html.brand body.pro-theme .primary-button:hover:not(.disabled),
+html.brand body .start-backup-button:hover:not(:disabled) { filter: brightness(1.07); transform: none; box-shadow: 0 10px 28px rgba(28, 143, 255, .42), inset 0 1px 0 rgba(255, 255, 255, .22); }
+html.brand body .start-backup-button:disabled,
+html.brand body .primary-button.disabled { background: #24242a; color: var(--dim); box-shadow: none; cursor: not-allowed; }
+html.brand body .backup-button__toggle { font-size: 10px; opacity: .85; }
+
+html.brand body .backed-files-button,
+html.brand body.pro-theme .backed-files-button {
+  width: 100%; height: 46px; border-radius: 12px; background: var(--card-2); color: var(--text);
+  border: 1px solid var(--line-2); box-shadow: none; font: 600 14.5px/1 -apple-system, "Segoe UI", system-ui, sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+html.brand body .backed-files-button:hover { background: #202027; transform: none; }
+html.brand body .backed-files-count:not(:empty) { background: rgba(28, 143, 255, .18); color: var(--blue-text); border-radius: 999px; padding: 3px 9px; font-size: 12px; min-width: 0; height: auto; }
+html.brand body .backed-files-button.highlight { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(28, 143, 255, .25); }
+
+html.brand body .stop-button,
+html.brand body.pro-theme .stop-button {
+  width: 100%; height: 44px; border-radius: 12px; background: rgba(255, 92, 92, .1); color: #ff8a8a;
+  border: 1px solid rgba(255, 92, 92, .4); box-shadow: none; font-weight: 600;
+}
+html.brand body .stop-button:hover { background: rgba(255, 92, 92, .18); }
+
+/* Chat list */
+html.brand body .chat-selection {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px; box-shadow: none; margin: 0;
+}
+html.brand body .chat-selection__list { max-height: 260px; }
+html.brand body .chat-selection__item {
+  border-radius: 10px; padding: 10px; gap: 10px; background: transparent; border: 1px solid transparent; margin-bottom: 2px;
+}
+html.brand body .chat-selection__item:hover { background: rgba(255, 255, 255, .04); }
+html.brand body .chat-selection__item.selected { background: rgba(28, 143, 255, .1); border-color: rgba(28, 143, 255, .35); }
+html.brand body .chat-selection__checkbox { accent-color: var(--blue); width: 16px; height: 16px; }
+html.brand body .chat-selection__name { color: var(--text); font-weight: 600; font-size: 13.5px; }
+html.brand body .chat-selection__preview { color: var(--muted); font-size: 12px; }
+html.brand body .chat-selection__preview--hint { color: var(--blue-text); }
+html.brand body .chat-selection__kind { background: rgba(255, 255, 255, .07); color: var(--muted); border: 1px solid var(--line); font-size: 10.5px; }
+html.brand body .chat-selection__active { background: var(--blue); color: #fff; font-size: 10px; letter-spacing: .06em; }
+html.brand body .chat-selection__active--unsupported { background: rgba(255, 176, 32, .18); color: var(--warn-text); }
+html.brand body .chat-selection__divider { border-color: var(--line); background: var(--line); }
+html.brand body .chat-selection__empty-text { color: var(--text); }
+html.brand body .chat-selection__empty-hint { color: var(--muted); }
+html.brand body .free-user-notice {
+  margin: 8px 2px; padding: 9px 11px; border-radius: 10px; font-size: 12px; line-height: 1.45; text-align: left;
+  background: var(--warn-bg); border: 1px solid var(--warn-line); color: var(--warn-text);
+}
+html.brand body .start-backup-button { margin-top: 6px; height: 42px; }
+
+/* Progress */
+html.brand body #statusContainer { margin-top: 6px; }
+html.brand body #loadingMessage,
+html.brand body.pro-theme #loadingMessage { color: var(--muted); font-size: 13px; text-align: left; }
+html.brand body #progressContainer,
+html.brand body.pro-theme #progressContainer { background: #1d1d23; height: 6px; border-radius: 999px; }
+html.brand body #progressBar,
+html.brand body.pro-theme #progressBar { background: linear-gradient(90deg, var(--blue), var(--blue-2)); border-radius: 999px; }
+html.brand body .backup-hint { color: var(--muted); background: transparent; border: 0; font-size: 12px; text-align: left; padding: 0; }
+
+/* Rating prompt */
+html.brand body .rating-prompt {
+  margin-top: 14px; padding: 16px; border-radius: 14px; text-align: left;
+  background: linear-gradient(180deg, #121826, #0f1117); border: 1px solid rgba(28, 143, 255, .4);
+}
+html.brand body .rating-prompt[hidden] { display: none; }
+html.brand body .rating-prompt__stars { color: #ffc64a; letter-spacing: 3px; font-size: 15px; }
+html.brand body .rating-prompt__title { font: 700 14px/1.35 var(--display); margin: 8px 0 4px; }
+html.brand body .rating-prompt__text { color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+html.brand body .rating-prompt__actions { display: flex; gap: 8px; margin-top: 12px; }
+html.brand body .rating-prompt__rate {
+  flex: 1; text-align: center; padding: 10px; border-radius: 10px; color: #fff; text-decoration: none; font-weight: 600; font-size: 13px;
+  background: linear-gradient(135deg, var(--blue), var(--blue-2));
+}
+html.brand body .rating-prompt__later { padding: 10px 14px; border-radius: 10px; background: transparent; border: 1px solid var(--line-2); color: var(--muted); font-size: 13px; cursor: pointer; }
+html.brand body .rating-prompt__later:hover { color: var(--text); }
+html.brand body .rating-prompt__issue { display: inline-block; margin-top: 10px; color: var(--muted); font-size: 12px; }
+
+/* Upgrade (Free) */
+html.brand body .upgrade-section {
+  margin-top: 18px; padding: 18px; border-radius: 16px; text-align: left;
+  background: linear-gradient(180deg, #121826, #0f1117); border: 1px solid rgba(28, 143, 255, .45);
+  box-shadow: 0 20px 50px rgba(28, 143, 255, .1); color: var(--text);
+}
+html.brand body .upgrade-section h2 { font: 800 18px/1.2 var(--display); text-transform: uppercase; letter-spacing: .04em; color: var(--text); text-align: left; margin-bottom: 6px; }
+html.brand body .upgrade-section .pricing-info { justify-content: flex-start; align-items: baseline; gap: 8px; margin: 4px 0 6px; }
+html.brand body .upgrade-section .price { font: 800 32px/1 var(--display); color: #fff; }
+html.brand body .upgrade-section .price-detail { color: var(--muted); font-size: 13px; }
+html.brand body .upgrade-section .free-plan-note { color: var(--muted); font-size: 12.5px; text-align: left; }
+html.brand body .upgrade-section .feature-list li { color: #d4d4d8; font-size: 13px; }
+html.brand body .upgrade-section .feature-list li::before { background: linear-gradient(135deg, var(--blue), var(--blue-2)); }
+html.brand body .upgrade-section .chrome-profile-note { color: var(--dim); font-size: 11.5px; text-align: left; }
+html.brand body .purchase-button {
+  width: 100%; height: 46px; border-radius: 12px; border: 0; color: #fff; font-weight: 700; font-size: 14.5px; letter-spacing: 0; text-transform: none;
+  background: linear-gradient(135deg, var(--blue), var(--blue-2)); box-shadow: 0 8px 22px rgba(28, 143, 255, .3);
+}
+html.brand body .purchase-button:hover { filter: brightness(1.07); transform: none; }
+html.brand body .upgrade-section .restore-button,
+html.brand body .restore-button {
+  width: 100%; height: 40px; border-radius: 12px; background: transparent; color: var(--text); border: 1px solid var(--line-2); box-shadow: none; font-weight: 600;
+}
+html.brand body .app-user-id-card { background: rgba(255, 255, 255, .03); border: 1px solid var(--line); border-radius: 12px; }
+html.brand body .app-user-id-card__label { color: var(--dim); }
+html.brand body .app-user-id-card__value { background: #0b0b0d; color: #d4d4d8; border: 1px solid var(--line); }
+html.brand body .app-user-id-card__copy { background: rgba(255, 255, 255, .08); color: var(--text); border: 1px solid var(--line-2); }
+
+/* Privacy footnote */
+html.brand body .privacy-notice,
+html.brand body.pro-theme .privacy-notice { background: transparent; border: 0; box-shadow: none; margin-top: 18px; padding: 0 2px; }
+html.brand body .privacy-notice p,
+html.brand body.pro-theme .privacy-notice p { color: var(--dim); font-size: 11.5px; line-height: 1.5; text-align: left; }
+
+/* Settings panel */
+html.brand body .settings-panel { background: var(--bg); color: var(--text); }
+html.brand body .settings-panel__header { background: var(--bg); border-bottom: 1px solid var(--line); }
+html.brand body .settings-panel__header h3 { font: 700 15px/1 var(--display); color: var(--text); }
+html.brand body .settings-panel__close { color: var(--muted); background: rgba(255, 255, 255, .05); border-radius: 8px; }
+html.brand body .settings-section { border-color: var(--line); }
+html.brand body .settings-checkbox span,
+html.brand body .settings-label__text { color: var(--text); }
+html.brand body .settings-hint,
+html.brand body .settings-label__hint,
+html.brand body .settings-slider__label { color: var(--muted); }
+html.brand body .settings-mode-note { background: rgba(28, 143, 255, .08); border: 1px solid rgba(28, 143, 255, .3); color: #cfe6ff; }
+html.brand body .settings-checkbox input[type="checkbox"] { accent-color: var(--blue); }
+html.brand body .turbo-badge,
+html.brand body .long-chat-badge,
+html.brand body .file-badge { background: rgba(28, 143, 255, .16); color: var(--blue-text); border: 1px solid rgba(28, 143, 255, .3); }
+html.brand body .settings-divider { background: var(--line); }
+html.brand body .settings-feedback__link { background: var(--card); border: 1px solid var(--line); color: var(--muted); }
+html.brand body .settings-feedback__link:hover { color: var(--text); background: var(--card-2); }
+html.brand body .settings-support-link { color: var(--blue-text); }
+html.brand body .settings-slider input[type="range"] { accent-color: var(--blue); }
+
+/* Toasts and modals */
+html.brand body .toast-notification,
+html.brand body.pro-theme .toast-notification { background: #1b1b21; color: var(--text); border: 1px solid var(--line-2); box-shadow: 0 16px 40px rgba(0, 0, 0, .6); }
+html.brand body .toast-notification--warning { border-color: var(--warn-line); }
+html.brand body .toast-notification--success { border-color: rgba(28, 143, 255, .5); }
+html.brand body .email-modal__content,
+html.brand body .confirm-modal__content { background: var(--card); color: var(--text); border: 1px solid var(--line-2); }
+html.brand body .email-modal__description,
+html.brand body .email-modal__help,
+html.brand body .confirm-modal__description { color: var(--muted); }
+html.brand body .email-modal__input { background: #0b0b0d; color: var(--text); border: 1px solid var(--line-2); }
+html.brand body .email-modal__btn--submit,
+html.brand body .confirm-modal__btn--continue { background: linear-gradient(135deg, var(--blue), var(--blue-2)); color: #fff; border: 0; }
+html.brand body .email-modal__btn--cancel,
+html.brand body .confirm-modal__btn--cancel { background: transparent; color: var(--text); border: 1px solid var(--line-2); }
+
+html.brand body #settingsLicenseSection .app-user-id-card__value { background: #0b0b0d; color: #d4d4d8; border: 1px solid var(--line); }
+html.brand body #settingsLicenseSection .app-user-id-card__copy { background: rgba(255, 255, 255, .08); color: var(--text); border: 1px solid var(--line-2); }
+html.brand body .settings-panel { position: fixed; inset: 0; z-index: 50; overflow-y: auto; }
+html.brand body .rating-prompt__actions > * { margin: 0; height: 40px; display: flex; align-items: center; justify-content: center; }
+html.brand body .rating-prompt__rate { flex: 1 1 auto; white-space: nowrap; }
+html.brand body .rating-prompt__later,
+html.brand body.pro-theme .rating-prompt__later { flex: 0 0 auto; width: auto; box-shadow: none; }
+html.brand body .privacy-notice .privacy-notice__source { margin-top: 6px; }
+html.brand body .privacy-notice a { color: var(--blue-text); }

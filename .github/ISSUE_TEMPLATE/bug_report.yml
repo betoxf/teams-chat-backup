@@ -1,0 +1,43 @@
+name: Bug report
+description: Something doesn't back up, export or display correctly.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please don't paste real chat content, names or screenshots with private messages. Security problems go to SECURITY.md, not here.
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      description: Shown at the top of the popup.
+      placeholder: "6.10"
+    validations:
+      required: true
+  - type: dropdown
+    id: teams
+    attributes:
+      label: Teams version
+      options:
+        - Work or school (teams.microsoft.com / teams.cloud.microsoft)
+        - Personal (teams.live.com)
+        - Through a Defender for Cloud Apps proxy (*.mcas.ms)
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 141 on macOS
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what you saw instead. Include the chat type (1:1, group, channel) and roughly how long it is.
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors (optional)
+      description: Right-click the popup → Inspect → Console. Remove anything private.
+      render: text

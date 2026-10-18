@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Purchase or license help
+    url: mailto:support@teamschatbackup.com
+    about: Restoring Pro, refunds and billing questions.
+  - name: Report a security vulnerability
+    url: https://github.com/betoxf/teams-chat-backup/security/advisories/new
+    about: Please report security problems privately.
