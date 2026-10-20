@@ -2,6 +2,11 @@
 
 Notable changes to the extension. Versions match `manifest.json` and the Chrome Web Store.
 
+## 6.11
+
+- Popup links to the public source code.
+- Support email is now support@teamschatbackup.com; Report a bug opens teamschatbackup.com/support.
+
 ## 6.10
 
 - First public source release.
