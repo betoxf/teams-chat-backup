@@ -4,3 +4,6 @@
 *.pem
 node_modules/
 .env*
+
+# Claude Code local permissions (may hold approved commands/secrets)
+.claude/settings.local.json
